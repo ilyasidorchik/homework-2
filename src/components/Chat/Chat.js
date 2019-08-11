@@ -1,49 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import Message from 'components/Message';
 import './Chat.css';
 
-export default class Chat extends React.Component {
-    state = {
-        messages: [],
-        messageInput: ""
+const Chat = (props) => {
+    const [messages, setMessages] = useState([]);
+    const [messageInput, setMessageInput] = useState('');
+
+    const changeInputMessage = (event) => {
+        setMessageInput(event.target.value);
     };
 
-    changeInputMessage = (event) => {
-        this.setState({ messageInput: event.target.value });
-    }
-
-    sendMessageOnEnter = (event) => {
-        const { messages, messageInput } = this.state;
-
+    const sendMessageOnEnter = (event) => {
         if (event.key === 'Enter') {
-            this.setState({
-                messages: [...messages, { text: messageInput }],
-                messageInput: ""
-            });
+            setMessages([...messages, { messageInput } ]);
+            setMessageInput('');
         }
-    }
+    };
 
-    render() {
-        const { messages, messageInput } = this.state;
-
-        return (
-            <div className="chat">
-                <div className="message-list">
-                    <div className="messages">
-                        {messages.map((message, index) => (
-                            <Message key={message.text + index} text={message.text}></Message>
-                        ))}
-                    </div>
+    return (
+        <div className="chat">
+            <div className="message-list">
+                <div className="messages">
+                    {messages.map((message, index) => (
+                        <Message key={message.text + index} text={message.text}></Message>
+                    ))}
                 </div>
-            
-                <input
-                    type="text"
-                    value={messageInput}
-                    className="input-message"
-                    onChange={this.changeInputMessage}
-                    onKeyPress={this.sendMessageOnEnter}
-                />
             </div>
-        );
-    }
-}
+            
+            <input
+                type="text"
+                value={messageInput}
+                className="input-message"
+                onChange={changeInputMessage}
+                onKeyPress={sendMessageOnEnter}
+            />
+        </div>
+    );
+};
+
+export default Chat;
